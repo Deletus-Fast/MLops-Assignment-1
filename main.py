@@ -8,9 +8,21 @@ def load_and_preprocess_data(file_path):
     # Load dataset
     data = pd.read_csv(file_path)
     
-    # Example preprocessing: remove missing values, and select relevant columns
-    data = data.dropna()
-    X = data[['area', 'bedrooms', 'bathrooms', 'floors']]  # Example features
+    # Convert categorical variables to binary (0 and 1) for simplicity
+    data['mainroad'] = data['mainroad'].map({'yes': 1, 'no': 0})
+    data['guestroom'] = data['guestroom'].map({'yes': 1, 'no': 0})
+    data['basement'] = data['basement'].map({'yes': 1, 'no': 0})
+    data['hotwaterheating'] = data['hotwaterheating'].map({'yes': 1, 'no': 0})
+    data['airconditioning'] = data['airconditioning'].map({'yes': 1, 'no': 0})
+    data['prefarea'] = data['prefarea'].map({'yes': 1, 'no': 0})
+    
+    # Furnishing status will be treated as dummy variables (one-hot encoding)
+    data = pd.get_dummies(data, columns=['furnishingstatus'], drop_first=True)
+
+    # Features and target variable
+    X = data[['area', 'bedrooms', 'bathrooms', 'stories', 'mainroad', 'guestroom', 'basement', 
+              'hotwaterheating', 'airconditioning', 'parking', 'prefarea', 'furnishingstatus_semi-furnished', 
+              'furnishingstatus_unfurnished']]
     y = data['price']  # Target variable
     
     return X, y
@@ -31,6 +43,5 @@ def train_model(X, y):
 
 # Load and train model (this would typically be triggered by some event)
 if __name__ == "__main__":
-    X, y = load_and_preprocess_data('house_prices.csv')
+    X, y = load_and_preprocess_data('Housing.csv')
     train_model(X, y)
-
