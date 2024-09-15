@@ -30,7 +30,7 @@ def load_and_preprocess_data(file_path):
 # Model Training
 def train_model(X, y):
     # Split the data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
     
     # Initialize and train the model
     model = LinearRegression()
@@ -39,6 +39,7 @@ def train_model(X, y):
     # Save the trained model to a file
     joblib.dump(model, 'house_price_model.pkl')
     
+    # Print the model performance
     print(f"Model trained with an R^2 score of {model.score(X_test, y_test)}")
 
 # Load and train model (this would typically be triggered by some event)
