@@ -14,7 +14,7 @@
             max-width: 400px;
             margin: 0 auto;
         }
-        input {
+        input, select {
             display: block;
             width: 100%;
             padding: 10px;
@@ -49,8 +49,54 @@
         <label for="bathrooms">Bathrooms:</label>
         <input type="number" id="bathrooms" name="bathrooms" required>
 
-        <label for="floors">Floors:</label>
-        <input type="number" id="floors" name="floors" required>
+        <label for="stories">Floors (Stories):</label>
+        <input type="number" id="stories" name="stories" required>
+
+        <label for="mainroad">Main Road Access:</label>
+        <select id="mainroad" name="mainroad" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="guestroom">Guest Room:</label>
+        <select id="guestroom" name="guestroom" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="basement">Basement:</label>
+        <select id="basement" name="basement" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="hotwaterheating">Hot Water Heating:</label>
+        <select id="hotwaterheating" name="hotwaterheating" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="airconditioning">Air Conditioning:</label>
+        <select id="airconditioning" name="airconditioning" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="parking">Parking Spaces:</label>
+        <input type="number" id="parking" name="parking" required>
+
+        <label for="prefarea">Preferred Area:</label>
+        <select id="prefarea" name="prefarea" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="furnishingstatus">Furnishing Status:</label>
+        <select id="furnishingstatus" name="furnishingstatus" required>
+            <option value="furnished">Furnished</option>
+            <option value="semi-furnished">Semi-furnished</option>
+            <option value="unfurnished">Unfurnished</option>
+        </select>
 
         <button type="submit">Get Prediction</button>
     </form>
@@ -62,17 +108,19 @@
             e.preventDefault(); // Prevent form from submitting the traditional way
             
             // Get the input values
-            const area = document.getElementById('area').value;
-            const bedrooms = document.getElementById('bedrooms').value;
-            const bathrooms = document.getElementById('bathrooms').value;
-            const floors = document.getElementById('floors').value;
-
-            // Create the payload to send to the Flask API
             const data = {
-                area: parseFloat(area),
-                bedrooms: parseInt(bedrooms),
-                bathrooms: parseInt(bathrooms),
-                floors: parseInt(floors)
+                area: parseFloat(document.getElementById('area').value),
+                bedrooms: parseInt(document.getElementById('bedrooms').value),
+                bathrooms: parseInt(document.getElementById('bathrooms').value),
+                stories: parseInt(document.getElementById('stories').value),
+                mainroad: document.getElementById('mainroad').value,
+                guestroom: document.getElementById('guestroom').value,
+                basement: document.getElementById('basement').value,
+                hotwaterheating: document.getElementById('hotwaterheating').value,
+                airconditioning: document.getElementById('airconditioning').value,
+                parking: parseInt(document.getElementById('parking').value),
+                prefarea: document.getElementById('prefarea').value,
+                furnishingstatus: document.getElementById('furnishingstatus').value
             };
 
             try {
@@ -89,7 +137,11 @@
                 const result = await response.json();
 
                 // Display the predicted price
-                document.getElementById('result').innerText = `Predicted House Price: $${result.predicted_price.toFixed(2)}`;
+                if (response.ok) {
+                    document.getElementById('result').innerText = `Predicted House Price: $${result.predicted_price.toFixed(2)}`;
+                } else {
+                    document.getElementById('result').innerText = 'Error: ' + (result.error || 'An unknown error occurred.');
+                }
             } catch (error) {
                 document.getElementById('result').innerText = 'Error fetching prediction. Please try again later.';
             }
