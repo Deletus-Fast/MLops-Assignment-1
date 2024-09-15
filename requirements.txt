@@ -5,4 +5,3 @@ joblib==1.1.0
 numpy==1.22.3
 cors
 Werkzeug==2.2.2
-Gunicorn
