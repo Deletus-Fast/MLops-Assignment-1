@@ -13,7 +13,15 @@ class FlaskTestCase(unittest.TestCase):
                 'area': 2000,
                 'bedrooms': 3,
                 'bathrooms': 2,
-                'floors': 1
+                'stories': 1,
+                'mainroad': 'yes',
+                'guestroom': 'no',
+                'basement': 'yes',
+                'hotwaterheating': 'no',
+                'airconditioning': 'yes',
+                'parking': 1,
+                'prefarea': 'yes',
+                'furnishingstatus': 'furnished'
             }),
             content_type='application/json'
         )
@@ -29,7 +37,15 @@ class FlaskTestCase(unittest.TestCase):
                 'area': 'not_a_number',  # Invalid input
                 'bedrooms': 3,
                 'bathrooms': 2,
-                'floors': 1
+                'stories': 1,
+                'mainroad': 'yes',
+                'guestroom': 'no',
+                'basement': 'yes',
+                'hotwaterheating': 'no',
+                'airconditioning': 'yes',
+                'parking': 1,
+                'prefarea': 'yes',
+                'furnishingstatus': 'furnished'
             }),
             content_type='application/json'
         )

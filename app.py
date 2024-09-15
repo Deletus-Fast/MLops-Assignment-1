@@ -14,8 +14,21 @@ def predict():
     # Parse incoming data (expecting JSON)
     data = request.json
     
-    # Extract the features from the request (area, bedrooms, bathrooms, floors)
-    features = np.array([data['area'], data['bedrooms'], data['bathrooms'], data['floors']]).reshape(1, -1)
+    # Extract the features from the request
+    features = np.array([
+        data.get('area', 0),
+        data.get('bedrooms', 0),
+        data.get('bathrooms', 0),
+        data.get('stories', 0),
+        1 if data.get('mainroad', 'no') == 'yes' else 0,
+        1 if data.get('guestroom', 'no') == 'yes' else 0,
+        1 if data.get('basement', 'no') == 'yes' else 0,
+        1 if data.get('hotwaterheating', 'no') == 'yes' else 0,
+        1 if data.get('airconditioning', 'no') == 'yes' else 0,
+        data.get('parking', 0),
+        1 if data.get('prefarea', 'no') == 'yes' else 0,
+        1 if data.get('furnishingstatus', 'unfurnished') == 'furnished' else 0
+    ]).reshape(1, -1)
     
     # Make prediction
     prediction = model.predict(features)
