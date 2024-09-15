@@ -10,11 +10,44 @@ app = Flask(__name__)
 model = joblib.load('house_price_model.pkl')
 scaler = joblib.load('scaler.pkl')
 
+# Helper function to validate input
+def validate_input(data):
+    try:
+        # Validate numeric fields
+        area = float(data.get('area', 0))
+        bedrooms = int(data.get('bedrooms', 0))
+        bathrooms = int(data.get('bathrooms', 0))
+        stories = int(data.get('stories', 0))
+        parking = int(data.get('parking', 0))
+        
+        # Validate categorical fields (yes/no, furnished/semi/unfurnished)
+        if data.get('mainroad', 'no') not in ['yes', 'no']:
+            return False
+        if data.get('guestroom', 'no') not in ['yes', 'no']:
+            return False
+        if data.get('basement', 'no') not in ['yes', 'no']:
+            return False
+        if data.get('hotwaterheating', 'no') not in ['yes', 'no']:
+            return False
+        if data.get('airconditioning', 'no') not in ['yes', 'no']:
+            return False
+        if data.get('prefarea', 'no') not in ['yes', 'no']:
+            return False
+        if data.get('furnishingstatus', 'unfurnished') not in ['furnished', 'semi-furnished', 'unfurnished']:
+            return False
+        
+        return True
+    except (ValueError, TypeError):
+        return False
+
 # Prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
     # Parse incoming data (expecting JSON)
     data = request.json
+
+    if not validate_input(data):
+        return jsonify({'error': 'Invalid input'}), 400
     
     # Extract the features from the request and convert them to match the training data
     features = np.array([
