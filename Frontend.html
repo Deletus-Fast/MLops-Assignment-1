@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>House Price Prediction</h1>
+    <form id="predictionForm">
+        <label for="area">Area (sqft):</label>
+        <input type="number" id="area" name="area" required>
+
+        <label for="bedrooms">Bedrooms:</label>
+        <input type="number" id="bedrooms" name="bedrooms" required>
+
+        <label for="bathrooms">Bathrooms:</label>
+        <input type="number" id="bathrooms" name="bathrooms" required>
+
+        <label for="floors">Floors:</label>
+        <input type="number" id="floors" name="floors" required>
+
+        <button type="submit">Get Prediction</button>
+    </form>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevent form from submitting the traditional way
+            
+            // Get the input values
+            const area = document.getElementById('area').value;
+            const bedrooms = document.getElementById('bedrooms').value;
+            const bathrooms = document.getElementById('bathrooms').value;
+            const floors = document.getElementById('floors').value;
+
+            // Create the payload to send to the Flask API
+            const data = {
+                area: parseFloat(area),
+                bedrooms: parseInt(bedrooms),
+                bathrooms: parseInt(bathrooms),
+                floors: parseInt(floors)
+            };
+
+            try {
+                // Send a POST request to the Flask API
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Parse the response JSON
+                const result = await response.json();
+
+                // Display the predicted price
+                document.getElementById('result').innerText = `Predicted House Price: $${result.predicted_price.toFixed(2)}`;
+            } catch (error) {
+                document.getElementById('result').innerText = 'Error fetching prediction. Please try again later.';
+            }
+        });
+    </script>
+
+</body>
+</html>
