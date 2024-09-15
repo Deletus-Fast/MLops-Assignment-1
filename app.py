@@ -6,10 +6,7 @@ from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
-<<<<<<< Updated upstream
-=======
 CORS(app)
->>>>>>> Stashed changes
 
 # Load the trained model and scaler
 model = joblib.load('house_price_model.pkl')
